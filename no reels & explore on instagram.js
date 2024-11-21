@@ -6,6 +6,7 @@
 // @updateURL    https://raw.githubusercontent.com/fatiqueos/userscripts/refs/heads/main/no%20reels%20%26%20explore%20on%20instagram.js
 // @downloadURL  https://raw.githubusercontent.com/fatiqueos/userscripts/refs/heads/main/no%20reels%20%26%20explore%20on%20instagram.js
 // @author       fatiqueos
+// @icon         https://www.bodurmedya.com/blog/wp-content/webp-express/webp-images/uploads/2023/10/image-15.png.webp
 // ==/UserScript==
 
 (function() {
