@@ -1,0 +1,56 @@
+// ==UserScript==
+// @name         Instagram: Ev Simgesini Takip Edilenlere Yönlendir ve Diğer Özellikler
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @match        https://www.instagram.com/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Ev simgesine tıklandığında takip edilenlere yönlendir
+    document.addEventListener("click", function(event) {
+        // Ev simgesine tıklanmış mı?
+        if (event.target && event.target.closest('a[href="/"]')) {
+            event.preventDefault();  // Ev simgesine tıklamayı durdur
+            window.location.href = "https://www.instagram.com/?variant=following";  // Takip edilenler sayfasına yönlendir
+        }
+    });
+
+    // Instagram'ın ana sayfasına (instagram.com) tıklandığında yönlendir
+    if (window.location.href === "https://www.instagram.com/") {
+        window.location.href = "https://www.instagram.com/?variant=following";  // Takip edilenler sayfasına yönlendir
+    }
+
+    // Sonsuz kaydırma (infinite scroll) özelliğini engelle
+    const observer = new MutationObserver(() => {
+        const loader = document.querySelector("div[role='progressbar']");
+        if (loader) {
+            loader.style.display = 'none'; // Sonsuz kaydırmayı durdur
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Önerilen takipçileri gizle
+    const hideSuggestedFollowers = () => {
+        const suggestedFollowers = document.querySelectorAll('a[href*="/explore/people/"]');
+        suggestedFollowers.forEach(follower => {
+            follower.closest('div').remove(); // Takipçi öneri kutusunu kaldır
+        });
+    };
+    hideSuggestedFollowers();
+    const suggestedFollowersObserver = new MutationObserver(hideSuggestedFollowers);
+    suggestedFollowersObserver.observe(document.body, { childList: true, subtree: true });
+
+    // Önerilen gönderileri gizle
+    const hideSuggestedPosts = () => {
+        const suggestedPosts = document.querySelectorAll('article div[aria-label="Suggested for you"]');
+        suggestedPosts.forEach(post => {
+            post.closest('article').remove(); // Önerilen gönderiyi kaldır
+        });
+    };
+    hideSuggestedPosts();
+    const suggestedPostsObserver = new MutationObserver(hideSuggestedPosts);
+    suggestedPostsObserver.observe(document.body, { childList: true, subtree: true });
+})();
